@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArtMatch - Mobile App Prototype</title>
+    <!-- TailwindCSS CDN & Google Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            dark: '#0B0713',
+                            card: '#150E25',
+                            accent: '#FF007A',
+                            accentGlow: 'rgba(255, 0, 122, 0.4)',
+                            purple: '#8A2BE2',
+                            green: '#00E676'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050308;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px 0;
+        }
+
+        /* Mockup de Celular */
+        .mobile-container {
+            width: 100%;
+            max-width: 412px;
+            height: 840px;
+            background: #0B0713;
+            border-radius: 48px;
+            border: 8px solid #221738;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(138, 43, 226, 0.25);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Estilos Glassmorphism */
+        .glass-card {
+            background: rgba(21, 14, 37, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glow-pink {
+            box-shadow: 0 0 25px rgba(255, 0, 122, 0.5);
+        }
+
+        /* Swiper Cards */
+        .swipe-card {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <!-- MOCKUP CELULAR -->
+    <div class="mobile-container">
+
+        <!-- BARRA DE ESTADO (STATUS BAR) -->
+        <div class="px-7 pt-3 pb-1 flex justify-between items-center text-xs text-gray-400 select-none z-30 bg-black/40">
+            <span class="font-semibold text-white" id="clock">21:42</span>
+            <div class="w-20 h-4 bg-black rounded-full mx-auto -mt-1 opacity-80 border border-white/10 flex items-center justify-center">
+                <div class="w-2 h-2 bg-white/20 rounded-full"></div>
+            </div>
+            <div class="flex items-center space-x-1.5">
+                <i class="fas fa-signal text-[10px]"></i>
+                <i class="fas fa-wifi text-[10px]"></i>
+                <i class="fas fa-battery-three-quarters text-xs"></i>
+            </div>
+        </div>
+
+        <!-- ================= 1. PANTALLA DE INICIO / LOGIN ================= -->
+        <div id="loginScreen" class="absolute inset-0 z-50 bg-gradient-to-b from-brand-dark via-purple-950/40 to-black p-6 flex flex-col justify-between overflow-y-auto">
+            <div class="text-center pt-8">
+                <div class="w-16 h-16 bg-gradient-to-tr from-pink-500 to-purple-600 rounded-3xl mx-auto flex items-center justify-center text-2xl shadow-xl glow-pink mb-3">
+                    ✨
+                </div>
+                <h1 class="text-3xl font-black tracking-tight text-white">ArtMatch</h1>
+                <p class="text-xs text-pink-400 font-semibold tracking-wider mt-1 uppercase">Conecta Talento. Crea Experiencias.</p>
+            </div>
+
+            <div class="my-auto space-y-4">
+                <p class="text-center text-xs text-gray-300 font-medium">¿Cómo querés ingresar a la app?</p>
+                
+                <!-- Selector de Roles Iniciales -->
+                <div class="space-y-2.5">
+                    <button onclick="selectInitialRole('artist')" class="w-full glass-card hover:bg-pink-500/10 p-3.5 rounded-2xl border border-pink-500/30 flex items-center space-x-3.5 text-left transition transform active:scale-95">
+                        <span class="text-2xl p-2 bg-pink-500/20 rounded-xl">🎸</span>
+                        <div>
+                            <h4 class="font-bold text-white text-sm">Artista / Banda</h4>
+                            <p class="text-[11px] text-gray-400">Mostrá tu propuesta y buscá fechas.</p>
+                        </div>
+                    </button>
+
+                    <button onclick="selectInitialRole('venue')" class="w-full glass-card hover:bg-purple-500/10 p-3.5 rounded-2xl border border-purple-500/30 flex items-center space-x-3.5 text-left transition transform active:scale-95">
+                        <span class="text-2xl p-2 bg-purple-500/20 rounded-xl">🍸</span>
+                        <div>
+                            <h4 class="font-bold text-white text-sm">Espacio / Bar</h4>
+                            <p class="text-[11px] text-gray-400">Contratá bandas y llená tu local.</p>
+                        </div>
+                    </button>
+
+                    <button onclick="selectInitialRole('fan')" class="w-full glass-card hover:bg-emerald-500/10 p-3.5 rounded-2xl border border-emerald-500/30 flex items-center space-x-3.5 text-left transition transform active:scale-95">
+                        <span class="text-2xl p-2 bg-emerald-500/20 rounded-xl">👥</span>
+                        <div>
+                            <h4 class="font-bold text-white text-sm">Público / Fan</h4>
+                            <p class="text-[11px] text-gray-400">Descubrí shows y comprá entradas.</p>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="text-center text-[11px] text-gray-500 pb-2">
+                Al ingresar aceptas los <a href="#" class="underline text-gray-400">Términos y Condiciones</a>
+            </div>
+        </div>
+
+        <!-- ================= 2. HEADER NATIVO APP ================= -->
+        <div id="appHeader" class="px-5 py-3 flex items-center justify-between z-20 border-b border-white/5 hidden">
+            <button onclick="toggleDrawer()" class="p-2 text-gray-300 hover:text-white">
+                <i class="fas fa-bars-staggered text-lg"></i>
+            </button>
+            <div class="flex items-center space-x-2">
+                <span class="font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-400 to-indigo-400 text-lg">ArtMatch</span>
+                <span id="roleBadge" class="text-[9px] bg-brand-accent/20 text-brand-accent border border-brand-accent/30 font-bold px-2 py-0.5 rounded-full uppercase">Artista</span>
+            </div>
+            <button onclick="openModal('helpModal')" class="p-2 text-gray-300 hover:text-pink-400 relative">
+                <i class="far fa-circle-question text-lg"></i>
+            </button>
+        </div>
+
+        <!-- APP DRAWER / MENÚ LATERAL -->
+        <div id="drawer" class="absolute inset-0 bg-black/85 backdrop-blur-xl z-50 transition-all duration-300 transform -translate-x-full flex flex-col">
+            <div class="p-5 border-b border-white/10 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" class="w-11 h-11 rounded-full border-2 border-brand-accent object-cover">
+                    <div>
+                        <h4 id="userName" class="font-bold text-white text-sm">Luna & Los Soles</h4>
+                        <p id="userRoleSub" class="text-xs text-gray-400">Indie Rock • CABA</p>
+                    </div>
+                </div>
+                <button onclick="toggleDrawer()" class="text-gray-400 hover:text-white"><i class="fas fa-xmark text-xl"></i></button>
+            </div>
+
+            <!-- Switcher de roles dentro del Menú -->
+            <div class="p-3 bg-white/5 m-4 rounded-2xl">
+                <p class="text-[10px] text-gray-400 mb-2 font-semibold uppercase">Cambiar Perfil de Usuario</p>
+                <div class="grid grid-cols-3 gap-1.5">
+                    <button onclick="switchRole('artist')" class="role-btn p-2 rounded-xl text-center text-[11px] bg-brand-accent text-white font-bold" id="btn-artist">🎸 Artista</button>
+                    <button onclick="switchRole('venue')" class="role-btn p-2 rounded-xl text-center text-[11px] bg-white/10 text-gray-300" id="btn-venue">🍸 Espacio</button>
+                    <button onclick="switchRole('fan')" class="role-btn p-2 rounded-xl text-center text-[11px] bg-white/10 text-gray-300" id="btn-fan">👥 Público</button>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto px-4 space-y-1 text-xs">
+                <button onclick="closeDrawer(); setView('feed');" class="w-full text-left p-3 rounded-xl hover:bg-white/5 flex items-center space-x-3 text-gray-200">
+                    <i class="fas fa-compass text-pink-500 w-5"></i><span>Descubrir y Galería</span>
+                </button>
+                <button onclick="closeDrawer(); openModal('chatModal');" class="w-full text-left p-3 rounded-xl hover:bg-white/5 flex items-center space-x-3 text-gray-200">
+                    <i class="fas fa-comments text-purple-400 w-5"></i><span>Negociaciones & Chat</span>
+                </button>
+                <button onclick="closeDrawer(); openModal('riderModal');" id="drawerRider" class="w-full text-left p-3 rounded-xl hover:bg-white/5 flex items-center space-x-3 text-gray-200">
+                    <i class="fas fa-sliders text-cyan-400 w-5"></i><span>Rider Técnico Digital</span>
+                </button>
+                <button onclick="closeDrawer(); openModal('roiModal');" id="drawerRoi" class="w-full text-left p-3 rounded-xl hover:bg-white/5 flex items-center space-x-3 text-gray-200">
+                    <i class="fas fa-calculator text-emerald-400 w-5"></i><span>Simulador de Rentabilidad</span>
+                </button>
+                <button onclick="closeDrawer(); openModal('walletModal');" id="drawerWallet" class="w-full text-left p-3 rounded-xl hover:bg-white/5 flex items-center space-x-3 text-gray-200">
+                    <i class="fas fa-ticket text-amber-400 w-5"></i><span>Mis Entradas (QR)</span>
+                </button>
+                <button onclick="closeDrawer(); openModal('scannerModal');" id="drawerScanner" class="w-full text-left p-3 rounded-xl hover:bg-white/5 flex items-center space-x-3 text-gray-200 hidden">
+                    <i class="fas fa-qrcode text-emerald-400 w-5"></i><span>Lector QR de Puerta</span>
+                </button>
+                <button onclick="closeDrawer(); openModal('helpModal');" class="w-full text-left p-3 rounded-xl hover:bg-white/5 flex items-center space-x-3 text-gray-200">
+                    <i class="fas fa-headset text-pink-400 w-5"></i><span>Soporte / Ayuda AI</span>
+                </button>
+                <button onclick="logout()" class="w-full text-left p-3 rounded-xl hover:bg-red-500/10 flex items-center space-x-3 text-red-400 mt-4">
+                    <i class="fas fa-right-from-bracket w-5"></i><span>Cerrar Sesión</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= 3. CONTENIDO PRINCIPAL ================= -->
+        <div id="mainContent" class="flex-1 overflow-y-auto px-5 py-4 space-y-4 hidden">
+            
+            <!-- Banner Dashboard por Rol -->
+            <div class="glass-card p-4 rounded-3xl relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 w-28 h-28 bg-brand-accent/20 rounded-full blur-2xl"></div>
+                <p class="text-[10px] text-pink-400 font-semibold tracking-wider uppercase">Recomendaciones del día</p>
+                <h2 id="welcomeTitle" class="text-lg font-bold text-white mt-0.5">Buenas noches, Luna 🎸</h2>
+                <p id="welcomeSub" class="text-xs text-gray-400 mt-1">4 Espacios compatibles buscan fecha este fin de semana.</p>
+                
+                <button onclick="openModal('matchDnaModal')" class="mt-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-md">
+                    ⚡ Ajustar Filtros Match DNA
+                </button>
+            </div>
+
+            <!-- Interacción Swipe / Tarjetas -->
+            <div class="flex justify-between items-center">
+                <h3 class="font-bold text-xs uppercase text-gray-400 tracking-wider">Deslizar o Explorar</h3>
+                <span class="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full">Algoritmo Activo</span>
+            </div>
+
+            <!-- Tarjeta Interactivas -->
+            <div id="swipeContainer" class="relative h-64 w-full">
+                <div id="activeCard" class="swipe-card absolute inset-0 glass-card p-4 rounded-3xl border border-white/10 flex flex-col justify-between">
+                    <div class="flex items-center space-x-3">
+                        <img id="cardImg" src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=200&auto=format&fit=crop&q=80" class="w-16 h-16 rounded-2xl object-cover">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <h4 id="cardTitle" class="font-bold text-base text-white">Lucía en el Bar</h4>
+                                <span id="cardMatch" class="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-1.5 py-0.5 rounded-md">95% Match</span>
+                            </div>
+                            <p id="cardSub" class="text-xs text-gray-400">Palermo, CABA • Cap. 150 pers.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/5 p-2.5 rounded-xl space-y-1 my-2">
+                        <p id="cardSpec1" class="text-xs text-gray-300">🔊 Equipamiento: PA Completo + Consola 16 ch.</p>
+                        <p id="cardSpec2" class="text-xs text-pink-400 font-semibold">💰 Acuérdo: $120.000 Fijo o 70% Puerta</p>
+                    </div>
+
+                    <!-- Botones de Acción de Swipe -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="handleSwipe(false)" class="w-full bg-white/10 hover:bg-white/20 text-gray-300 font-bold py-2 rounded-xl text-xs flex items-center justify-center space-x-1.5">
+                            <i class="fas fa-xmark text-red-400"></i><span>Pasar</span>
+                        </button>
+                        <button onclick="handleSwipe(true)" class="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold py-2 rounded-xl text-xs flex items-center justify-center space-x-1.5 glow-pink">
+                            <i class="fas fa-heart"></i><span>Me Interesa</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accesos Rápidos -->
+            <div class="grid grid-cols-2 gap-2 pt-2">
+                <button onclick="openModal('chatModal')" class="glass-card p-3 rounded-2xl flex items-center space-x-2 text-xs">
+                    <i class="fas fa-comments text-pink-400 text-base"></i>
+                    <span class="font-semibold text-white">Abrir Negociaciones</span>
+                </button>
+                <button onclick="openModal('helpModal')" class="glass-card p-3 rounded-2xl flex items-center space-x-2 text-xs">
+                    <i class="fas fa-headset text-purple-400 text-base"></i>
+                    <span class="font-semibold text-white">Asistente AI</span>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- ================= 4. BARRA INFERIOR EXCLUSIVA DEL RAYO ================= -->
+        <div id="appBottomNav" class="px-6 py-3 bg-gradient-to-t from-black via-black/90 to-transparent z-30 flex justify-center items-center relative hidden">
+            <!-- Glow detrás del botón -->
+            <div class="absolute w-16 h-16 bg-pink-500/30 rounded-full blur-xl animate-pulse"></div>
+
+            <!-- BOTÓN CENTRAL ÚNICO DEL RAYO -->
+            <button onclick="triggerMatchCelebration()" class="relative z-10 w-16 h-16 rounded-full bg-gradient-to-tr from-pink-500 via-purple-600 to-indigo-500 text-white flex items-center justify-center text-2xl shadow-2xl glow-pink transform active:scale-90 transition-all duration-200 border-2 border-white/20">
+                <i class="fas fa-bolt"></i>
+            </button>
+        </div>
+
+        <!-- BARRA INDICADORA NATIVA INFERIOR -->
+        <div class="pb-1 flex justify-center bg-black">
+            <div class="w-32 h-1 bg-white/20 rounded-full"></div>
+        </div>
+
+        <!-- ================= MODALES Y VENTANAS ================= -->
+
+        <!-- MODAL: CELEBRACIÓN MATCH -->
+        <div id="matchModal" class="absolute inset-0 bg-black/90 backdrop-blur-2xl z-50 flex flex-col items-center justify-center p-6 hidden">
+            <div class="w-20 h-20 bg-gradient-to-tr from-pink-500 to-purple-500 rounded-full flex items-center justify-center text-3xl text-white shadow-2xl glow-pink mb-4 animate-bounce">
+                ✨
+            </div>
+            <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-300 text-center">¡HAY MATCH!</h2>
+            <p class="text-xs text-gray-300 text-center mt-1">Alta compatibilidad de agenda y propuesta</p>
+
+            <div class="w-full glass-card p-4 rounded-2xl my-5 space-y-2.5 text-xs">
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Compatibilidad:</span>
+                    <span class="text-emerald-400 font-bold">96% Alineado</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Fecha Propuesta:</span>
+                    <span class="text-white font-bold">Próximo Viernes</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Rider Técnico:</span>
+                    <span class="text-pink-400 font-bold">Aprobado</span>
+                </div>
+            </div>
+
+            <button onclick="closeModal('matchModal'); openModal('chatModal');" class="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold py-3 rounded-2xl shadow-lg">
+                💬 Abrir Chat de Negociación
+            </button>
+            <button onclick="closeModal('matchModal')" class="mt-3 text-xs text-gray-400 hover:text-white">Seguir explorando</button>
+        </div>
+
+        <!-- MODAL: CHAT Y NEGOCIACIÓN -->
+        <div id="chatModal" class="absolute inset-0 bg-brand-dark z-50 flex flex-col hidden">
+            <div class="p-4 border-b border-white/10 flex items-center justify-between bg-white/5">
+                <div class="flex items-center space-x-3">
+                    <img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=100&auto=format&fit=crop&q=80" class="w-8 h-8 rounded-full object-cover">
+                    <div>
+                        <h4 class="font-bold text-xs text-white">Lucía en el Bar</h4>
+                        <p class="text-[10px] text-emerald-400">En línea • Chat de propuesta</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('chatModal')" class="text-gray-400 hover:text-white"><i class="fas fa-xmark text-lg"></i></button>
+            </div>
+
+            <div class="flex-1 p-4 overflow-y-auto space-y-3 text-xs">
+                <div class="bg-white/5 p-3 rounded-2xl max-w-[85%] text-gray-300">
+                    ¡Hola! Vimos su perfil en ArtMatch. ¿Tienen disponible el Viernes 16 para tocar?
+                </div>
+                <div class="bg-pink-600/30 border border-pink-500/30 p-3 rounded-2xl max-w-[85%] ml-auto text-white">
+                    ¡Hola! Sí, tenemos la fecha libre. Revisen nuestro Rider adjunto.
+                </div>
+
+                <!-- Widget de Pre-Acuerdo -->
+                <div class="glass-card p-3 rounded-2xl border border-pink-500/40 my-2 space-y-2">
+                    <p class="font-bold text-pink-400 text-[11px] uppercase">📜 Contrato / Pre-Acuerdo</p>
+                    <div class="flex justify-between text-gray-300">
+                        <span>Cachet:</span> <span class="font-bold text-emerald-400">$120.000 ARS</span>
+                    </div>
+                    <button onclick="alert('Contrato Digital firmado y guardado en PDF.')" class="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold py-2 rounded-xl text-xs mt-1">
+                        ✍️ Firmar Pre-Acuerdo
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-3 border-t border-white/10 flex items-center space-x-2">
+                <input type="text" placeholder="Escribir mensaje..." class="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+                <button class="bg-pink-500 text-white p-2 rounded-xl"><i class="fas fa-paper-plane text-xs"></i></button>
+            </div>
+        </div>
+
+        <!-- MODAL: RIDER TÉCNICO -->
+        <div id="riderModal" class="absolute inset-0 bg-brand-dark/95 backdrop-blur-xl z-50 p-5 overflow-y-auto hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-white text-sm flex items-center">
+                    <i class="fas fa-sliders text-cyan-400 mr-2"></i> Rider Técnico Digital
+                </h3>
+                <button onclick="closeModal('riderModal')" class="text-gray-400 hover:text-white"><i class="fas fa-xmark text-lg"></i></button>
+            </div>
+            <div class="space-y-2 text-xs">
+                <label class="flex items-center space-x-2 p-2 bg-white/5 rounded-xl">
+                    <input type="checkbox" checked class="accent-pink-500">
+                    <span class="text-gray-200">2 Micrófonos Vocales Shure SM58</span>
+                </label>
+                <label class="flex items-center space-x-2 p-2 bg-white/5 rounded-xl">
+                    <input type="checkbox" checked class="accent-pink-500">
+                    <span class="text-gray-200">1 Consola Digital mínimo 8 Canales</span>
+                </label>
+                <label class="flex items-center space-x-2 p-2 bg-white/5 rounded-xl">
+                    <input type="checkbox" class="accent-pink-500">
+                    <span class="text-gray-200">Monitoreo In-Ear (Lleva la banda)</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- MODAL: CALCULADORA ROI -->
+        <div id="roiModal" class="absolute inset-0 bg-brand-dark/95 backdrop-blur-xl z-50 p-5 overflow-y-auto hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-white text-sm flex items-center">
+                    <i class="fas fa-calculator text-emerald-400 mr-2"></i> Simulador de Ganancias
+                </h3>
+                <button onclick="closeModal('roiModal')" class="text-gray-400 hover:text-white"><i class="fas fa-xmark text-lg"></i></button>
+            </div>
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="text-gray-400">Entradas Estimadas Vendidas</label>
+                    <input type="number" value="100" class="w-full bg-white/5 border border-white/10 rounded-xl p-2 text-white mt-1">
+                </div>
+                <div>
+                    <label class="text-gray-400">Precio Ticket ($)</label>
+                    <input type="number" value="3000" class="w-full bg-white/5 border border-white/10 rounded-xl p-2 text-white mt-1">
+                </div>
+                <div class="glass-card p-3 rounded-2xl border border-emerald-500/30">
+                    <p class="text-gray-400">Recaudación Est. Puerta:</p>
+                    <p class="text-lg font-bold text-emerald-400">$300.000 ARS</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL: WALLET QR -->
+        <div id="walletModal" class="absolute inset-0 bg-brand-dark z-50 p-5 overflow-y-auto hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-white text-sm flex items-center">
+                    <i class="fas fa-ticket text-amber-400 mr-2"></i> Billetera de Entradas
+                </h3>
+                <button onclick="closeModal('walletModal')" class="text-gray-400 hover:text-white"><i class="fas fa-xmark text-lg"></i></button>
+            </div>
+            <div class="glass-card p-4 rounded-2xl text-center space-y-3">
+                <p class="font-bold text-sm text-white">Luna & Los Soles en Vivo</p>
+                <p class="text-xs text-gray-400">Lucía en el Bar • Vie 16 Oct</p>
+                <div class="w-32 h-32 bg-white p-2 rounded-xl mx-auto flex items-center justify-center">
+                    <i class="fas fa-qrcode text-black text-7xl"></i>
+                </div>
+                <p class="text-[10px] text-gray-400">Presentá este código QR en la entrada del local.</p>
+            </div>
+        </div>
+
+        <!-- MODAL: ESCÁNER QR -->
+        <div id="scannerModal" class="absolute inset-0 bg-brand-dark z-50 p-5 overflow-y-auto hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-white text-sm flex items-center">
+                    <i class="fas fa-qrcode text-emerald-400 mr-2"></i> Lector QR de Puerta
+                </h3>
+                <button onclick="closeModal('scannerModal')" class="text-gray-400 hover:text-white"><i class="fas fa-xmark text-lg"></i></button>
+            </div>
+            <div class="glass-card p-6 rounded-2xl text-center space-y-4">
+                <div class="w-40 h-40 border-2 border-dashed border-emerald-400 rounded-2xl mx-auto flex items-center justify-center animate-pulse">
+                    <i class="fas fa-camera text-gray-500 text-3xl"></i>
+                </div>
+                <button onclick="alert('Entrada Validada: Mateo Rossi (Ticket #042)')" class="w-full bg-emerald-500 text-black font-bold py-2 rounded-xl text-xs">
+                    Simular Validación de Entrada
+                </button>
+            </div>
+        </div>
+
+        <!-- MODAL: MATCH DNA -->
+        <div id="matchDnaModal" class="absolute inset-0 bg-brand-dark z-50 p-5 overflow-y-auto hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-white text-sm flex items-center">
+                    <i class="fas fa-bolt text-pink-500 mr-2"></i> Algoritmo Match DNA
+                </h3>
+                <button onclick="closeModal('matchDnaModal')" class="text-gray-400 hover:text-white"><i class="fas fa-xmark text-lg"></i></button>
+            </div>
+            <div class="space-y-3 text-xs">
+                <p class="text-gray-300">Ajustá los parámetros de búsqueda para afinar los resultados del botón Rayo ⚡</p>
+                <div>
+                    <label class="text-gray-400">Ubicación Máxima (Km)</label>
+                    <input type="range" class="w-full accent-pink-500 mt-1" min="1" max="50" value="15">
+                </div>
+                <button onclick="closeModal('matchDnaModal'); triggerMatchCelebration();" class="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold py-2.5 rounded-xl mt-2">
+                    Guardar y Buscar Coincidencias ⚡
+                </button>
+            </div>
+        </div>
+
+        <!-- MODAL: AYUDA AI -->
+        <div id="helpModal" class="absolute inset-0 bg-brand-dark z-50 p-5 overflow-y-auto hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-white text-sm flex items-center">
+                    <i class="fas fa-headset text-pink-400 mr-2"></i> Asistente de Soporte
+                </h3>
+                <button onclick="closeModal('helpModal')" class="text-gray-400 hover:text-white"><i class="fas fa-xmark text-lg"></i></button>
+            </div>
+            <div class="space-y-3 text-xs">
+                <div class="glass-card p-3 rounded-2xl">
+                    <p class="font-bold text-pink-400 mb-1">🤖 ArtMatch AI Assist</p>
+                    <p class="text-gray-300">¿Dudas con los pre-acuerdos o el uso del escáner? Escribinos tus consultas.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- SCRIPT DE LÓGICA & NAVEGACIÓN -->
+    <script>
+        // Actualizar reloj de barra de estado
+        setInterval(() => {
+            const d = new Date();
+            document.getElementById('clock').textContent = d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }, 1000);
+
+        // Selección inicial de Rol (Login)
+        function selectInitialRole(role) {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('appHeader').classList.remove('hidden');
+            document.getElementById('mainContent').classList.remove('hidden');
+            document.getElementById('appBottomNav').classList.remove('hidden');
+
+            switchRole(role);
+        }
+
+        function logout() {
+            closeDrawer();
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('appHeader').classList.add('hidden');
+            document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('appBottomNav').classList.add('hidden');
+        }
+
+        function toggleDrawer() {
+            document.getElementById('drawer').classList.toggle('-translate-x-full');
+        }
+
+        function closeDrawer() {
+            document.getElementById('drawer').classList.add('-translate-x-full');
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function triggerMatchCelebration() {
+            openModal('matchModal');
+        }
+
+        // Lógica de cambio de Rol
+        function switchRole(role) {
+            const roleBadge = document.getElementById('roleBadge');
+            const welcomeTitle = document.getElementById('welcomeTitle');
+            const welcomeSub = document.getElementById('welcomeSub');
+            const userName = document.getElementById('userName');
+            const userRoleSub = document.getElementById('userRoleSub');
+
+            // Visibilidad según rol
+            const drawerRider = document.getElementById('drawerRider');
+            const drawerRoi = document.getElementById('drawerRoi');
+            const drawerWallet = document.getElementById('drawerWallet');
+            const drawerScanner = document.getElementById('drawerScanner');
+
+            if(role === 'artist') {
+                roleBadge.textContent = "Artista";
+                welcomeTitle.textContent = "Buenas noches, Luna 🎸";
+                welcomeSub.textContent = "4 Espacios compatibles buscan fecha en Palermo.";
+                userName.textContent = "Luna & Los Soles";
+                userRoleSub.textContent = "Indie Rock • CABA";
+
+                drawerRider.classList.remove('hidden');
+                drawerRoi.classList.remove('hidden');
+                drawerWallet.classList.add('hidden');
+                drawerScanner.classList.add('hidden');
+            } else if(role === 'venue') {
+                roleBadge.textContent = "Espacio";
+                welcomeTitle.textContent = "Hola, Lucía en el Bar 🍸";
+                welcomeSub.textContent = "3 propuestas de bandas pendientes de aprobación.";
+                userName.textContent = "Lucía en el Bar";
+                userRoleSub.textContent = "Bar Cultural • Palermo";
+
+                drawerRider.classList.remove('hidden');
+                drawerRoi.classList.remove('hidden');
+                drawerWallet.classList.add('hidden');
+                drawerScanner.classList.remove('hidden');
+            } else {
+                roleBadge.textContent = "Público";
+                welcomeTitle.textContent = "¡Hola, Mateo! 🎟️";
+                welcomeSub.textContent = "Hay 8 shows en vivo cerca de tu zona esta noche.";
+                userName.textContent = "Mateo Rossi";
+                userRoleSub.textContent = "Fan / Clubber";
+
+                drawerRider.classList.add('hidden');
+                drawerRoi.classList.add('hidden');
+                drawerWallet.classList.remove('hidden');
+                drawerScanner.classList.add('hidden');
+            }
+
+            closeDrawer();
+        }
+
+        // Lógica de Swipe simulada
+        function handleSwipe(like) {
+            const activeCard = document.getElementById('activeCard');
+            activeCard.style.transform = like ? 'translateX(150px) rotate(15deg)' : 'translateX(-150px) rotate(-15deg)';
+            activeCard.style.opacity = '0';
+
+            setTimeout(() => {
+                if(like) triggerMatchCelebration();
+                activeCard.style.transform = 'none';
+                activeCard.style.opacity = '1';
+            }, 300);
+        }
+    </script>
+</body>
+</html>
